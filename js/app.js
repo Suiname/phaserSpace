@@ -42,6 +42,7 @@ game.physics.arcade.enable(ninja);
 ninja.body.bounce.y = 0;
 ninja.body.gravity.y = 600;
 ninja.body.collideWorldBounds = true;
+ninja.anchor.setTo(.5);
 
 zombie = game.add.sprite(650, 500, 'zombie');
 zombie.animations.add('left', [0,1,2,3,4,5,6,7,8,9], 30, true);
@@ -49,7 +50,8 @@ game.physics.arcade.enable(zombie);
 zombie.body.bounce.y = 0;
 zombie.body.gravity.y = 900;
 zombie.body.collideWorldBounds = true;
-
+zombie.direction = 'left';
+zombie.anchor.setTo(.5);
 enemies = game.add.group();
 enemies.add(zombie);
 
@@ -59,7 +61,7 @@ cursors = game.input.keyboard.createCursorKeys();
 
 function update() {
 game.physics.arcade.collide(ninja, platforms);
-game.physics.arcade.collide(ninja, enemies);
+game.physics.arcade.overlap(ninja, enemies);
 game.physics.arcade.collide(enemies, platforms);
 movement();
 enemyMovement();
@@ -98,21 +100,19 @@ function movement(){
 }
 
 function enemyMovement(){
-  if (zombie.direction == 'right') {
+  if (zombie.direction == 'right' && zombie.body.x < 736) {
     zombie.body.velocity.x = 100;
-    zombie.scale.x = -1;
-    zombie.animations.play('left');
     zombie.direction = 'right';
-  }else if (zombie.body.x < 16 && zombie.direction == 'left') {
+  } else if (zombie.body.x < 1 && zombie.direction == 'left') {
     zombie.body.velocity.x = 100;
     zombie.scale.x = -1;
-    zombie.animations.play('left');
     zombie.direction = 'right';
   } else if (zombie.body.x >= 736 && zombie.direction == 'right'){
+    zombie.direction = 'left';
+    zombie.scale.x = 1;
     zombie.body.velocity.x = -100;
     zombie.animations.play('left');
-    zombie.direction = 'left';
-  } else {
+  } else if (zombie.direction == 'left') {
     zombie.body.velocity.x = -100;
     zombie.animations.play('left');
     zombie.direction = 'left';
