@@ -26,14 +26,15 @@ platforms.enableBody = true;
 
 var floor;
 for (var i = 0; i < 26; i++) {
-  floor = platforms.create(0 + i*32, game.world.height - 64, 'floor');
+  floor = platforms.create(0 + i*32, game.world.height - 16, 'floor');
   floor.body.immovable = true;
 }
 
 
 
 ninja = game.add.sprite(50, 50, 'ninja');
-ninja.animations.add('run', [16, 17, 18, 19, 20, 21, 22, 23], 30, true);
+ninja.animations.add('run_right', [16, 17, 18, 19, 20, 21, 22, 23], 30, true);
+ninja.animations.add('run_left', [8, 9, 10, 11, 12, 13, 14, 15], 30, true);
 
 game.physics.arcade.enable(ninja);
 ninja.body.bounce.y = 0;
@@ -56,14 +57,14 @@ function movement(){
       //  Move to the left
       ninja.body.velocity.x = -150;
 
-      ninja.animations.play('run');
+      ninja.animations.play('run_left');
   }
   else if (cursors.right.isDown)
   {
       //  Move to the right
       ninja.body.velocity.x = 150;
 
-      ninja.animations.play('run');
+      ninja.animations.play('run_right');
   }
   else
   {
