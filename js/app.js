@@ -2,6 +2,8 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
 var ninja;
 var platforms;
 var cursors;
+var zombie;
+var enemies;
 
 function preload() {
 
@@ -9,6 +11,7 @@ function preload() {
     game.load.image('floor', 'assets/floor.png');
     game.load.image('star', 'assets/star.png');
     game.load.spritesheet('ninja', 'assets/ninja.png', 50, 77);
+    game.load.spritesheet('zombie', 'assets/zombie.png', 64, 64);
 
 }
 
@@ -35,18 +38,31 @@ for (var i = 0; i < 26; i++) {
 ninja = game.add.sprite(50, 50, 'ninja');
 ninja.animations.add('run_right', [16, 17, 18, 19, 20, 21, 22, 23], 30, true);
 ninja.animations.add('run_left', [8, 9, 10, 11, 12, 13, 14, 15], 30, true);
-
 game.physics.arcade.enable(ninja);
 ninja.body.bounce.y = 0;
 ninja.body.gravity.y = 600;
 ninja.body.collideWorldBounds = true;
+
+zombie = game.add.sprite(650, 500, 'zombie');
+zombie.animations.add('left', [0,1,2,3,4,5,6,7,8,9], 30, true);
+game.physics.arcade.enable(zombie);
+zombie.body.bounce.y = 0;
+zombie.body.gravity.y = 900;
+zombie.body.collideWorldBounds = true;
+
+enemies = game.add.group();
+enemies.add(zombie);
+
 
 cursors = game.input.keyboard.createCursorKeys();
 }
 
 function update() {
 game.physics.arcade.collide(ninja, platforms);
+game.physics.arcade.collide(ninja, enemies);
+game.physics.arcade.collide(enemies, platforms);
 movement();
+enemyMovement();
 }
 
 function movement(){
@@ -79,4 +95,27 @@ function movement(){
   {
       ninja.body.velocity.y = -350;
   }
+}
+
+function enemyMovement(){
+  if (zombie.direction == 'right') {
+    zombie.body.velocity.x = 100;
+    zombie.scale.x = -1;
+    zombie.animations.play('left');
+    zombie.direction = 'right';
+  }else if (zombie.body.x < 16 && zombie.direction == 'left') {
+    zombie.body.velocity.x = 100;
+    zombie.scale.x = -1;
+    zombie.animations.play('left');
+    zombie.direction = 'right';
+  } else if (zombie.body.x >= 736 && zombie.direction == 'right'){
+    zombie.body.velocity.x = -100;
+    zombie.animations.play('left');
+    zombie.direction = 'left';
+  } else {
+    zombie.body.velocity.x = -100;
+    zombie.animations.play('left');
+    zombie.direction = 'left';
+  }
+
 }
