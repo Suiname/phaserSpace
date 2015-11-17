@@ -44,16 +44,13 @@ ninja.body.gravity.y = 600;
 ninja.body.collideWorldBounds = true;
 ninja.anchor.setTo(.5);
 
-zombie = game.add.sprite(650, 500, 'zombie');
-zombie.animations.add('left', [0,1,2,3,4,5,6,7,8,9], 30, true);
-game.physics.arcade.enable(zombie);
-zombie.body.bounce.y = 0;
-zombie.body.gravity.y = 900;
-zombie.body.collideWorldBounds = true;
-zombie.direction = 'left';
-zombie.anchor.setTo(.5);
 enemies = game.add.group();
-enemies.add(zombie);
+for (var i = 0; i < 4; i++) {
+  var test = new enemy();
+  test.body.x = Math.random()*700;
+  test.body.x = Math.random()*400;
+}
+
 
 
 cursors = game.input.keyboard.createCursorKeys();
@@ -99,25 +96,28 @@ function movement(){
   }
 }
 
-function enemyMovement(){
-  if (zombie.direction == 'right' && zombie.body.x < 736) {
-    zombie.body.velocity.x = 100;
-    zombie.direction = 'right';
-  } else if (zombie.body.x < 1 && zombie.direction == 'left') {
-    zombie.body.velocity.x = 100;
-    zombie.scale.x = -1;
-    zombie.direction = 'right';
-  } else if (zombie.body.x >= 736 && zombie.direction == 'right'){
-    zombie.direction = 'left';
-    zombie.scale.x = 1;
-    zombie.body.velocity.x = -100;
-    zombie.animations.play('left');
-  } else if (zombie.direction == 'left') {
-    zombie.body.velocity.x = -100;
-    zombie.animations.play('left');
-    zombie.direction = 'left';
-  }
 
+
+function enemyMovement(){
+  enemies.forEachAlive(function(z){
+  if (z.direction == 'right' && z.body.x < 736) {
+    z.body.velocity.x = 100;
+    z.direction = 'right';
+  } else if (z.body.x < 1 && z.direction == 'left') {
+    z.body.velocity.x = 100;
+    z.scale.x = -1;
+    z.direction = 'right';
+  } else if (z.body.x >= 736 && z.direction == 'right'){
+    z.direction = 'left';
+    z.scale.x = 1;
+    z.body.velocity.x = -100;
+    z.animations.play('left');
+  } else if (z.direction == 'left') {
+    z.body.velocity.x = -100;
+    z.animations.play('left');
+    z.direction = 'left';
+  }
+}, this);
 }
 
 function death() {
@@ -125,9 +125,22 @@ function death() {
 }
 
 function enemyCollision(nin, zom) {
-  if (Math.abs(nin.body.x - zom.body.x) <= 20 && Math.abs(nin.body.y - zom.body.y) <= 25) {
+  if (Math.abs(nin.body.x - zom.body.x) <= 20 && Math.abs(nin.body.y - zom.body.y) <= 32) {
     return true;
   } else {
     return false;
   }
+}
+
+function enemy(){
+  var zomb = game.add.sprite(650, 500, 'zombie');
+  zomb.animations.add('left', [0,1,2,3,4,5,6,7,8,9], 30, true);
+  game.physics.arcade.enable(zomb);
+  zomb.body.bounce.y = 0;
+  zomb.body.gravity.y = 900;
+  zomb.body.collideWorldBounds = true;
+  zomb.direction = 'left';
+  zomb.anchor.setTo(.5);
+  enemies.add(zomb);
+  return zomb;
 }
