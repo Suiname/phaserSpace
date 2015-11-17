@@ -61,7 +61,7 @@ cursors = game.input.keyboard.createCursorKeys();
 
 function update() {
 game.physics.arcade.collide(ninja, platforms);
-game.physics.arcade.overlap(ninja, enemies);
+game.physics.arcade.overlap(ninja, enemies, death, enemyCollision);
 game.physics.arcade.collide(enemies, platforms);
 movement();
 enemyMovement();
@@ -118,4 +118,16 @@ function enemyMovement(){
     zombie.direction = 'left';
   }
 
+}
+
+function death() {
+  ninja.kill();
+}
+
+function enemyCollision(nin, zom) {
+  if (Math.abs(nin.body.x - zom.body.x) <= 20 && Math.abs(nin.body.y - zom.body.y) <= 25) {
+    return true;
+  } else {
+    return false;
+  }
 }
