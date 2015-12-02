@@ -1,6 +1,7 @@
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 var ninja;
 var platforms;
+var ladders;
 var cursors;
 var zombie;
 var enemies;
@@ -10,6 +11,7 @@ function preload() {
     game.load.image('brick', 'assets/brick.png');
     game.load.image('floor', 'assets/floor.png');
     game.load.image('star', 'assets/star.png');
+    game.load.image('ladder', 'assets/ladder.png')
     game.load.spritesheet('ninja', 'assets/ninja.png', 50, 77);
     game.load.spritesheet('zombie', 'assets/zombie.png', 64, 64);
 
@@ -26,6 +28,10 @@ for (var i = 0; i < 13; i++) {
 
 platforms = game.add.group();
 platforms.enableBody = true;
+ladders = game.add.group();
+ladders.enableBody = true;
+
+var l = new ladder(150,300);
 
 var floor;
 for (var i = 0; i < 26; i++) {
@@ -46,9 +52,7 @@ ninja.anchor.setTo(.5);
 
 enemies = game.add.group();
 for (var i = 0; i < 4; i++) {
-  var test = new enemy();
-  test.body.x = Math.random()*700;
-  test.body.x = Math.random()*400;
+  var test = new enemy(Math.random()*700, Math.random()*400);
 }
 
 
@@ -132,8 +136,8 @@ function enemyCollision(nin, zom) {
   }
 }
 
-function enemy(){
-  var zomb = game.add.sprite(650, 500, 'zombie');
+function enemy(xcoord, ycoord){
+  var zomb = game.add.sprite(xcoord, ycoord, 'zombie');
   zomb.animations.add('left', [0,1,2,3,4,5,6,7,8,9], 30, true);
   game.physics.arcade.enable(zomb);
   zomb.body.bounce.y = 0;
@@ -144,3 +148,8 @@ function enemy(){
   enemies.add(zomb);
   return zomb;
 }
+
+function ladder(xcoord, ycoord){
+  var ladd = ladders.create(xcoord, ycoord, 'ladder');
+  ladd.body.immovable = true;
+  }
