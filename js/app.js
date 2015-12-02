@@ -5,6 +5,7 @@ var ladders;
 var cursors;
 var zombie;
 var enemies;
+var treasure;
 
 function preload() {
 
@@ -12,6 +13,7 @@ function preload() {
     game.load.image('floor', 'assets/floor.png');
     game.load.image('star', 'assets/star.png');
     game.load.image('ladder', 'assets/ladder.png')
+    game.load.image('chest', 'assets/chest.png')
     game.load.spritesheet('ninja', 'assets/ninja.png', 50, 77);
     game.load.spritesheet('zombie', 'assets/zombie.png', 64, 64);
 
@@ -32,6 +34,7 @@ ladders = game.add.group();
 ladders.enableBody = true;
 
 var l = new ladder(150,300);
+var t = new chest(600, 300);
 
 var floor;
 for (var i = 0; i < 26; i++) {
@@ -62,6 +65,8 @@ cursors = game.input.keyboard.createCursorKeys();
 
 function update() {
 game.physics.arcade.collide(ninja, platforms);
+game.physics.arcade.overlap(ninja, treasure);
+game.physics.arcade.collide(platforms, treasure);
 game.physics.arcade.overlap(ninja, enemies, death, enemyCollision);
 game.physics.arcade.collide(enemies, platforms);
 movement();
@@ -152,4 +157,13 @@ function enemy(xcoord, ycoord){
 function ladder(xcoord, ycoord){
   var ladd = ladders.create(xcoord, ycoord, 'ladder');
   ladd.body.immovable = true;
-  }
+}
+
+function chest(xcoord, ycoord){
+  treasure = game.add.sprite(xcoord, ycoord, 'chest');
+  game.physics.arcade.enable(treasure);
+  treasure.body.bounce.y = 0;
+  treasure.body.gravity.y = 1500;
+  treasure.anchor.setTo(.5);
+  return treasure;
+}
